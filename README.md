@@ -1,7 +1,20 @@
 # Night Owls Detector
+***
+Prints those who sended devman task code for review after midnight
+## Usage
 
-[TODO. There will be project description]
+* python 3.5 is required to run script
+* install requirement modules:
+```bash
+$ pip install -r requirements.txt
+```
+* Run:
 
-# Project Goals
+```bash
+$ python seek_dev_nighters.py
+```
+
+
+### Project Goals
 
 The code is written for educational purposes. Training course for web-developers - [DEVMAN.org](https://devman.org)
