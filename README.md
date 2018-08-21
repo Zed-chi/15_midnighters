@@ -13,6 +13,15 @@ $ pip install -r requirements.txt
 ```bash
 $ python seek_dev_nighters.py
 ```
+output:
+```bash
+=== Midnighters ===
+someguy1
+somegirl2
+someguy3
+somegirl4
+```
+
 
 
 ### Project Goals
