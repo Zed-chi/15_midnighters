@@ -5,7 +5,7 @@ from pytz import timezone
 
 
 def get_attempts_page(link, page):
-    response = requests.get(link+"?page="+str(page))
+    response = requests.get(link, params={"page":page})
     return json.loads(response.text)
 
 
