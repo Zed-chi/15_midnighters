@@ -5,7 +5,7 @@ from pytz import timezone
 
 
 def fetch_attempts_json(link, page):
-    response = requests.get(link, params={"page":page})
+    response = requests.get(link, params={"page": page})
     return json.loads(response.text)
 
 
@@ -15,7 +15,8 @@ def load_attempts(link):
     pages = attempts_page["number_of_pages"]
     att_list = attempts_page["records"]
     if pages > 1:
-        for page in range(2, pages+1):
+        while page<pages:
+            page+=1
             att_list += fetch_attempts_json(link, page)["records"]
     return att_list
 
