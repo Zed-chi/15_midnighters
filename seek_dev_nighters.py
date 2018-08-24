@@ -10,7 +10,7 @@ def fetch_decoded_json(link, params):
         return []
 
 
-def get_attempts_list(link):
+def get_attempts_lists(link):
     page = 1
     while True:
         decoded_json = fetch_decoded_json(link, {"page": page})
@@ -35,7 +35,7 @@ def print_midnighters(midnighters):
 
 def main():
     link = "https://devman.org/api/challenges/solution_attempts/"
-    attempts_lists = get_attempts_list(link)
+    attempts_lists = get_attempts_lists(link)
     midnighters = set()
     for attempts_list in attempts_lists:
         midnighters.update(
