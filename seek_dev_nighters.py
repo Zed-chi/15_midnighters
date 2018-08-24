@@ -4,10 +4,7 @@ import requests
 
 
 def fetch_decoded_json(link, params):
-    try:
-        return requests.get(link, params=params).json()
-    except JSONDecodeError:
-        return []
+    return requests.get(link, params=params).json()
 
 
 def get_attempts_lists(link):
