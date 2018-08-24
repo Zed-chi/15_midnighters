@@ -1,42 +1,31 @@
 from datetime import datetime
-import requests
-import json
 from pytz import timezone
+import requests
 
 
-def fetch_attempts_json(link, page):
-    response = requests.get(link, params={"page": page})
-    return json.loads(response.text)
+def fetch_decoded_json(link, params):
+    try:
+        return requests.get(link, params=params).json()
+    except JSONDecodeError:
+        return []
 
 
-def load_attempts(link):
+def get_attempts_list(link):
     page = 1
-    attempts_page = fetch_attempts_json(link, page)
-    pages = attempts_page["number_of_pages"]
-    att_list = attempts_page["records"]
-    if pages > 1:
-        while page<pages:
-            page+=1
-            att_list += fetch_attempts_json(link, page)["records"]
-    return att_list
+    while True:
+        decoded_json = fetch_decoded_json(link, {"page": page})
+        yield decoded_json["records"]
+        page += 1
+        if decoded_json["page"] == decoded_json["number_of_pages"]:
+            break
 
 
-def is_midnighter(stamp, time_zone):
+def is_midnighter(timestamp, time_zone):
     attempt_time = datetime.fromtimestamp(
-        stamp,
+        timestamp,
         tz=timezone(time_zone),
     )
-    if attempt_time.hour >= 0 and attempt_time.hour < 6:
-        return True
-    return False
-
-
-def get_midnighters_names(attempts):
-    midnighters = set()
-    for attempt in attempts:
-        if is_midnighter(attempt["timestamp"], attempt["timezone"]):
-            midnighters.add(attempt["username"])
-    return midnighters
+    return 0 <= attempt_time.hour < 6
 
 
 def print_midnighters(midnighters):
@@ -46,9 +35,17 @@ def print_midnighters(midnighters):
 
 def main():
     link = "https://devman.org/api/challenges/solution_attempts/"
-    attempts = load_attempts(link)
-    midnighters_names = get_midnighters_names(attempts)
-    print_midnighters(midnighters_names)
+    attempts_lists = get_attempts_list(link)
+    midnighters = set()
+    for attempts_list in attempts_lists:
+        midnighters.update(
+            [
+                attempt["username"]
+                for attempt in attempts_list
+                if is_midnighter(attempt["timestamp"], attempt["timezone"])
+            ]
+        )
+    print_midnighters(midnighters)
 
 
 if __name__ == "__main__":
